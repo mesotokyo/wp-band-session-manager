@@ -1,0 +1,6 @@
+experiment
+.*
+!.gitignore
+*~
+config.php
+
