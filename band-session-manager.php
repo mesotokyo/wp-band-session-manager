@@ -82,10 +82,12 @@ class BandSessionMaster {
 
 	function downloadFile($url) {
 		if ($url) {
-			$request = new Google_Http_Request($url, 'GET', null, null);
-			$httpRequest = Google_Client::$io->authenticatedRequest($request);
-			if ($httpRequest->getResponseHttpCode() == 200) {
-				return $httpRequest->getResponseBody();
+			$auth = $this->client->getAuth();
+			$request = $auth->sign(new Google_Http_Request($url, 'GET', null, null));
+			$io = new Google_IO_Curl($client);
+			$resp = $io->executeRequest($request);
+			if ($resp[2] == 200) {
+				return $resp[0];
 			} else {
 				// An error occurred.
 				return null;
