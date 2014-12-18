@@ -84,7 +84,7 @@ class BandSessionMaster {
 		if ($url) {
 			$auth = $this->client->getAuth();
 			$request = $auth->sign(new Google_Http_Request($url, 'GET', null, null));
-			$io = new Google_IO_Curl($client);
+			$io = new Google_IO_Curl($this->client);
 			$resp = $io->executeRequest($request);
 			if ($resp[2] == 200) {
 				return $resp[0];
