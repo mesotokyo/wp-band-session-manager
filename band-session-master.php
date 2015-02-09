@@ -43,9 +43,8 @@ class BandSessionMaster {
 		$foot = '</dl></div>';
 		$outputs = array();
 		foreach ($entries as $member => $songs) {
-			$matches = array();
 			$name = $member;
-			if (preg_match('/（(.*)）/', $member, &$matches) === 1) {
+			if (preg_match('/（(.*)）/', $member, $matches) === 1) {
 				$name = $matches[1] . '（譲渡可）';
 			}
 
@@ -71,8 +70,7 @@ class BandSessionMaster {
 
 				// パートとindexの対応付けを作る
 				for ($i = 1; $i < count($items); $i++) {
-					$part = array();
-					if (preg_match($part_pattern, $items[$i], &$part)) {
+					if (preg_match($part_pattern, $items[$i], $part)) {
 						$parts[$i] = $part[0];
 					}
 				}
