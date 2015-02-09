@@ -55,7 +55,7 @@ class BandSessionMaster {
 		return $head . implode($outputs) . $foot;
 	}
 
-	function sessionEntries() {
+	function sessionMembers() {
 		echo $this->createMemberList();
 	}
 
@@ -105,7 +105,7 @@ class BandSessionMaster {
 		return $entries;
 	}
 
-	function createTable() {
+	function createEntryTable() {
 		$workSheet = $this->workSheet;
 		$result = "<div class='band-session-entry-list'><table>\n";
 		$first_row = true;
@@ -143,8 +143,8 @@ class BandSessionMaster {
 		return $result;
 	}
 
-	function sessionPlayers() {
-		echo $this->createTable();
+	function sessionEntries() {
+		echo $this->createEntryTable();
 	}
 
 	function downloadFile($url) {
