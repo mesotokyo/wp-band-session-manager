@@ -37,7 +37,72 @@ class BandSessionMaster {
 		$this->workSheet = $this->getWorkSheet($this->exportLink);
 	}
 
+	function createMemberList() {
+		$entries = $this->getMemberList();
+		$head = '<div class="member-list"><dl>\n';
+		$foot = '</dl></div>';
+		$outputs = array();
+		foreach ($entries as $member => $songs) {
+			$matches = array();
+			$name = $member;
+			if (preg_match('/（(.*)）/', $member, &$matches) === 1) {
+				$name = $matches[1] . '（譲渡可）';
+			}
+
+			$outputs[] = '<dt>' . $name . '</dt>\n';
+			$outputs[] = '<dd>' . implode('、', $songs) . '</dd>\n';
+		}
+		return $head . implode($outputs) . $foot;
+	}
+
+	function sessionEntries() {
+		echo $this->createMemberList();
+	}
+
 	function getMemberList() {
+		$workSheet = $this->workSheet;
+		$first_row = TRUE;
+		$entries = array();
+		$parts = array();
+		$part_pattern = '/[A-Za-z\.]+/';
+		foreach ($workSheet as $items) {
+			if ($first_row) {
+				$first_row = false;
+
+				// パートとindexの対応付けを作る
+				for ($i = 1; $i < count($items); $i++) {
+					$part = array();
+					if (preg_match($part_pattern, $items[$i], &$part)) {
+						$parts[$i] = $part[0];
+					}
+				}
+				continue;
+			}
+
+			$title = $items[0];
+			for ($i = 1; $i < count($items); $i++) {
+				$part = $parts[$i];
+				if ($part === NULL) {
+					continue;
+				}
+
+				if ($items[$i] === '') {
+					continue;
+				}
+				if ($items[$i] === '-') {
+					continue;
+				}
+
+				$members = explode('/', $items[$i]);
+				foreach ($members as $member) {
+					if (!array_key_exists($member, $entries)) {
+						$entries[$member] = array();
+					}
+					$entries[$member][] = $title . '（' . $part . '）';
+				}
+			}
+		}
+		return $entries;
 	}
 
 	function createTable() {
@@ -45,7 +110,7 @@ class BandSessionMaster {
 		$result = "<div class='band-session-entry-list'><table>\n";
 		$first_row = true;
 		$counter = 0;
-		foreach($workSheet as $item) {
+		foreach ($workSheet as $item) {
 			$result = $result . "<tr>";
 			if ($first_row) {
 				$result = $result . "<th>#</th>";
