@@ -39,17 +39,18 @@ class BandSessionMaster {
 
 	function createMemberList() {
 		$entries = $this->getMemberList();
-		$head = '<div class="member-list"><dl>\n';
+		$head = "<div class=\"member-list\"><dl>\n";
 		$foot = '</dl></div>';
 		$outputs = array();
 		foreach ($entries as $member => $songs) {
+			$matches = array();
 			$name = $member;
-			if (preg_match('/（(.*)）/', $member, $matches) === 1) {
+			if (preg_match('/（(.*)）/', $member, &$matches) === 1) {
 				$name = $matches[1] . '（譲渡可）';
 			}
 
-			$outputs[] = '<dt>' . $name . '</dt>\n';
-			$outputs[] = '<dd>' . implode('、', $songs) . '</dd>\n';
+			$outputs[] = '<dt>' . $name . "</dt>\n";
+			$outputs[] = '<dd>' . implode('、', $songs) . "</dd>\n";
 		}
 		return $head . implode($outputs) . $foot;
 	}
@@ -70,7 +71,8 @@ class BandSessionMaster {
 
 				// パートとindexの対応付けを作る
 				for ($i = 1; $i < count($items); $i++) {
-					if (preg_match($part_pattern, $items[$i], $part)) {
+					$part = array();
+					if (preg_match($part_pattern, $items[$i], &$part)) {
 						$parts[$i] = $part[0];
 					}
 				}
