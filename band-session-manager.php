@@ -15,6 +15,7 @@ $bandSession = new BandSessionMaster($exportLink, $client_id, $client_secret, $a
 
 function entrylist_shortcode_handler($atts, $content=null) {
 	global $bandSession;
+	$bandSession->fetchWorkSheet();
 	$bandSession->sessionPlayers();
 }
 

@@ -33,11 +33,15 @@ class BandSessionMaster {
 		$this->client = $client;
 	}
 
+	function fetchWorkSheet() {
+		$this->workSheet = $this->getWorkSheet($this->exportLink);
+	}
+
 	function getMemberList() {
 	}
 
 	function createTable() {
-		$workSheet = $this->getWorkSheet($this->exportLink);
+		$workSheet = $this->workSheet;
 		$result = "<div class='band-session-entry-list'><table>\n";
 		$first_row = true;
 		$counter = 0;
