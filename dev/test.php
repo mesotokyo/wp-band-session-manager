@@ -6,8 +6,8 @@ require_once dirname(__FILE__) . '/../band-session-master.php';
 $bandSession = new BandSessionMaster($exportLink, $client_id, $client_secret, $accessToken);
 
 $bandSession->fetchWorkSheet();
-$bandSession->sessionEntries();
-$bandSession->sessionMembers();
+echo $bandSession->sessionEntries();
+echo $bandSession->sessionMembers();
 
 //$members = $bandSession->getMemberList();
 

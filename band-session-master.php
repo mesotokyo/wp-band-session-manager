@@ -63,7 +63,7 @@ class BandSessionMaster {
 	}
 
 	function sessionMembers() {
-		echo $this->createMemberList();
+		return $this->createMemberList();
 	}
 
 	function getMemberList() {
@@ -150,7 +150,7 @@ class BandSessionMaster {
 	}
 
 	function sessionEntries() {
-		echo $this->createEntryTable();
+		return $this->createEntryTable();
 	}
 
 	function downloadFile($url) {
