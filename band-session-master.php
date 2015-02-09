@@ -39,7 +39,7 @@ class BandSessionMaster {
 
 	function createMemberList() {
 		$entries = $this->getMemberList();
-		$head = "<div class=\"member-list\"><dl>\n";
+		$head = "<div class=\"band-session-member-list\"><dl>\n";
 		$foot = '</dl></div>';
 		$outputs = array();
 
@@ -113,7 +113,7 @@ class BandSessionMaster {
 
 	function createEntryTable() {
 		$workSheet = $this->workSheet;
-		$result = "<div class='band-session-entry-list'><table>\n";
+		$result = "<div class=\"band-session-entry-list\"><table>\n";
 		$first_row = true;
 		$counter = 0;
 		foreach ($workSheet as $item) {
