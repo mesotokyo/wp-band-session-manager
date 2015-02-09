@@ -8,11 +8,8 @@
   Author URI: http://meso.tokyo/
 */
 
-require_once dirname(__FILE__) . '/google-api-php-client/src/Google/Client.php';
-require_once dirname(__FILE__) . '/google-api-php-client/src/Google/Service/Drive.php';
-require dirname(__FILE__) .  '/config.php';
-
 require_once dirname(__FILE__) . '/band-session-master.php';
+require dirname(__FILE__) .  '/config.php';
 
 $bandSession = new BandSessionMaster($exportLink, $client_id, $client_secret, $accessToken);
 

@@ -1,5 +1,8 @@
 <?php
 
+require_once dirname(__FILE__) . '/google-api-php-client/src/Google/Client.php';
+require_once dirname(__FILE__) . '/google-api-php-client/src/Google/Service/Drive.php';
+
 class BandSessionMaster {
 	function __construct($exportLink, $client, $secret, $token) {
 		$this->exportLink = $exportLink;
