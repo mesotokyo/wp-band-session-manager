@@ -16,8 +16,16 @@ $bandSession = new BandSessionMaster($exportLink, $client_id, $client_secret, $a
 function entrylist_shortcode_handler($atts, $content=null) {
 	global $bandSession;
 	$bandSession->fetchWorkSheet();
-	$bandSession->sessionPlayers();
+	$bandSession->sessionEntries();
 }
 
+function memberlist_shortcode_handler($atts, $content=null) {
+	global $bandSession;
+	$bandSession->fetchWorkSheet();
+	$bandSession->sessionMembers();
+}
+
+
 add_shortcode('session-entry-list', 'entrylist_shortcode_handler');
+add_shortcode('session-member-list', 'memberlist_shortcode_handler');
 
