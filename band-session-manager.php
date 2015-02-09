@@ -46,18 +46,22 @@ class BandSessionMaster {
 		$workSheet = $this->getWorkSheet($this->exportLink);
 		$result = "<div class='band-session-entry-list'><table>\n";
 		$first_row = true;
+		$counter = 1;
 		foreach($workSheet as $item) {
 			$result = $result . "<tr>";
 			if ($first_row) {
+				$result = $result . "<th>#</th>";
 				foreach ($item as $cell) {
 					$result = $result . "<th>$cell</th>";
 				}
 				$first_row = false;
 			} else {
+				$result = $result . "<th>" . $counter . "</th>";
 				foreach ($item as $cell) {
 					$result = $result . "<td>$cell</td>";
 				}
 			}
+			$counter++;
 			$result = $result . "</tr>\n";
 		}
 		$result = $result . "</table></div>\n";
