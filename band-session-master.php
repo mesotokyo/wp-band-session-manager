@@ -42,14 +42,22 @@ class BandSessionMaster {
 		$head = "<div class=\"member-list\"><dl>\n";
 		$foot = '</dl></div>';
 		$outputs = array();
+
+		// 譲渡可の処理
+		$entries_new = array();
 		foreach ($entries as $member => $songs) {
 			$name = $member;
 			if (preg_match('/（(.*)）/', $member, $matches) === 1) {
 				$name = $matches[1] . '（譲渡可）';
 			}
-
+			$entries_new[$name] = implode('、', $songs);
+		}
+			
+		// メンバー一覧をソート
+		ksort($entries_new);
+		foreach ($entries_new as $name => $songs) {
 			$outputs[] = '<dt>' . $name . "</dt>\n";
-			$outputs[] = '<dd>' . implode('、', $songs) . "</dd>\n";
+			$outputs[] = '<dd>' . $songs . "</dd>\n";
 		}
 		return $head . implode($outputs) . $foot;
 	}
