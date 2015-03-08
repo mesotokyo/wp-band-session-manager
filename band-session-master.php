@@ -67,6 +67,7 @@ class BandSessionMaster {
 	}
 
 	function getMemberList() {
+		$title_column = 1;
 		$workSheet = $this->workSheet;
 		$first_row = TRUE;
 		$entries = array();
@@ -77,16 +78,18 @@ class BandSessionMaster {
 				$first_row = false;
 
 				// パートとindexの対応付けを作る
-				for ($i = 1; $i < count($items); $i++) {
+				for ($i = 0; $i < count($items); $i++) {
 					if (preg_match($part_pattern, $items[$i], $part)) {
 						$parts[$i] = $part[0];
+					} else {
+						$parts[$i] = NULL;
 					}
 				}
 				continue;
 			}
 
-			$title = $items[0];
-			for ($i = 1; $i < count($items); $i++) {
+			$title = $items[$title_column];
+			for ($i = 0; $i < count($items); $i++) {
 				$part = $parts[$i];
 				if ($part === NULL) {
 					continue;
@@ -112,6 +115,8 @@ class BandSessionMaster {
 	}
 
 	function createEntryTable() {
+		$begin_count = 3;
+		$end_count = 17;
 		$workSheet = $this->workSheet;
 		$result = "<div class=\"band-session-entry-list\"><table>\n";
 		$first_row = true;
@@ -125,7 +130,11 @@ class BandSessionMaster {
 				}
 				$first_row = false;
 			} else {
-				$result = $result . "<th>" . $counter . "</th>";
+				if (($counter >= $begin_count) && ($counter < $end_count)) {
+				$result = $result . "<th>" . ($counter - $begin_count + 1). "</th>";
+				} else {
+				$result = $result . "<th></th>";
+				}
 				foreach ($item as $cell) {
 					$result = $result . "<td>$cell</td>";
 				}
