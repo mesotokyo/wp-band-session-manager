@@ -22,8 +22,8 @@ class BandSessionMaster {
 			$authUrl = $client->createAuthUrl();
 
 			//Request authorization
-			print "Please visit:\n$authUrl\n\n";
-			print "Please enter the auth code:\n";
+			//print "Please visit:\n$authUrl\n\n";
+			//print "Please enter the auth code:\n";
 			$authCode = trim(fgets(STDIN));
 
 			// Exchange authorization code for access token
