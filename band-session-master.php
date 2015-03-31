@@ -33,8 +33,11 @@ class BandSessionMaster {
 		$this->client = $client;
 	}
 
-	function fetchWorkSheet() {
-		$this->workSheet = $this->getWorkSheet($this->exportLink);
+	function fetchWorkSheet($url="") {
+		if ($url === "") {
+			$url = $this->exportLink;
+		}
+		$this->workSheet = $this->getWorkSheet($url);
 	}
 
 	function createMemberList() {
