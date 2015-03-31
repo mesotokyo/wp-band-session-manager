@@ -24,10 +24,11 @@ class BandSessionMaster {
 			//Request authorization
 			//print "Please visit:\n$authUrl\n\n";
 			//print "Please enter the auth code:\n";
-			$authCode = trim(fgets(STDIN));
+			//$authCode = trim(fgets(STDIN));
 
 			// Exchange authorization code for access token
-			$token = $client->authenticate($authCode);
+			//$token = $client->authenticate($authCode);
+			return;
 		}
 		$client->setAccessToken($token);
 		$this->client = $client;
