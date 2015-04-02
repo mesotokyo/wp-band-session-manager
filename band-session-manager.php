@@ -11,21 +11,25 @@
 require_once dirname(__FILE__) . '/band-session-master.php';
 require dirname(__FILE__) . '/config-page.php';
 
-$bandSession = new BandSessionMaster("",
-				     get_option('bsmaster_google_client_id'),
-				     get_option('bsmaster_google_client_secret'),
-				     get_option('bsmaster_google_access_token'));
+
+function createSession() {
+	$bandSession = new BandSessionMaster("",
+		get_option('bsmaster_google_client_id'),
+		get_option('bsmaster_google_client_secret'),
+		get_option('bsmaster_google_access_token'));
+	return $bandSession;
+}
 
 function entrylist_shortcode_handler($atts, $content=null) {
 	$target_url = html_entity_decode($atts['url']);
-	global $bandSession;
+	$bandSession = createSession();
 	$bandSession->fetchWorkSheet($target_url);
 	return $bandSession->sessionEntries();
 }
 
 function memberlist_shortcode_handler($atts, $content=null) {
 	$target_url = html_entity_decode($atts['url']);
-	global $bandSession;
+	$bandSession = createSession();
 	$bandSession->fetchWorkSheet($target_url);
 	return $bandSession->sessionMembers();
 }
