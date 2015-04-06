@@ -119,7 +119,7 @@ class BandSessionMaster {
 	}
 
 	function createEntryTable() {
-		$begin_count = 3;
+		$begin_count = 1;
 		$end_count = 17;
 		$workSheet = $this->workSheet;
 		$result = "<div class=\"band-session-entry-list\"><table>\n";
