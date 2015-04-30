@@ -51,7 +51,7 @@ class BandSessionMaster {
 		$entries_new = array();
 		foreach ($entries as $member => $songs) {
 			$name = $member;
-			if (preg_match('/（(.*)）/', $member, $matches) === 1) {
+			if (preg_match('/(.*)（(.*)）/', $member, $matches) === 1) {
 				$name = $matches[1] . '（譲渡可）';
 			}
 			$entries_new[$name] = implode('、', $songs);
