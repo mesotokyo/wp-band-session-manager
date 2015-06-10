@@ -76,6 +76,7 @@ class BandSessionMaster {
 		$first_row = TRUE;
 		$entries = array();
 		$parts = array();
+		$urls = array();
 		$part_pattern = '/[A-Za-z\.]+/';
 		foreach ($workSheet as $items) {
 			if ($first_row) {
@@ -84,7 +85,6 @@ class BandSessionMaster {
 				// パートとindexの対応付けを作る
 				for ($i = 0; $i < count($items); $i++) {
 					if ($items[$i] === "URL") {
-						
 					}
 					else if (preg_match($part_pattern, $items[$i], $part)) {
 						$parts[$i] = $part[0];
@@ -147,12 +147,24 @@ class BandSessionMaster {
 				} else {
 					$result = $result . "<th></th>";
 				}
+				// scan url
+				$url = "";
+				for ($i = 0; $i < count($item); $i++) {
+					if ($header[$i] === "URL") {
+						$url = $item[$i];
+					}
+				}
 				for ($i = 0; $i < count($item); $i++) {
 					$cell = $item[$i];
 					if ($header[$i] === "URL") {
 						continue;
 					}
+					if ($url !== "") {
+						$cell = "<a href='$url'>$cell</a>";
+						$url = "";
+					}
 					$result = $result . "<td>$cell</td>";
+						
 				}
 			}
 			$counter++;
