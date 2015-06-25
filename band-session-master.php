@@ -121,17 +121,56 @@ class BandSessionMaster {
 		return $entries;
 	}
 
-	function createEntryTable() {
-		$begin_count = 1;
-		$end_count = 17;
+	function createTimeTable() {
+		$header_row = 1;
+		$begin_row = 2;
+		$end_row = 15;
+		$title_col = 2;
 		$workSheet = $this->workSheet;
-		$result = "<div class=\"band-session-entry-list\"><table>\n";
-		$first_row = true;
-		$counter = 0;
+		$result = "<div class=\"band-session-time-table\"><table>\n";
+		$current_row = 1;
 		$header = array();
 		foreach ($workSheet as $item) {
+			if ($current_row === $header_row) {
+				$result = $result . "<tr>";
+				foreach ($item as $cell) {
+					$result = $result . "<th>$cell</th>";
+				}
+				$result = $result . "</tr>";
+			} else {
+				$result = $result . "<tr>";
+				foreach ($item as $cell) {
+					if ($item[$title_col - 1][0] === '[') {
+						$result = $result . "<th>$cell</th>";
+					} else {
+						$result = $result . "<td>$cell</td>";
+					}
+				}
+				$result = $result . "</tr>";
+			}
+		}
+		return $result;
+	}
+
+	function createEntryTable() {
+		$header_row = 1;
+		$begin_row = 2;
+		$end_row = 12;
+
+		$begin_count = 1;
+		$end_count = 17;
+
+		$workSheet = $this->workSheet;
+		$result = "<div class=\"band-session-entry-list\"><table>\n";
+
+		$counter = 0;
+
+		$current_row = 0;
+		$header = array();
+		foreach ($workSheet as $item) {
+			$current_row++;
 			$result = $result . "<tr>";
-			if ($first_row) {
+			if ($current_row === $header_row) {
 				$header = $item;
 				$result = $result . "<th>#</th>";
 				foreach ($item as $cell) {
@@ -140,12 +179,12 @@ class BandSessionMaster {
 					}
 					$result = $result . "<th>$cell</th>";
 				}
-				$first_row = false;
+				$continue;
 			} else {
-				if (($counter >= $begin_count) && ($counter < $end_count)) {
-					$result = $result . "<th>" . ($counter - $begin_count + 1). "</th>";
-				} else {
+				if (($current_row < $begin_row) || ($current_row > $end_row)) {
 					$result = $result . "<th></th>";
+				} else {
+					$result = $result . "<th>" . ($counter - $begin_count + 1). "</th>";
 				}
 				// scan url
 				$url = "";
