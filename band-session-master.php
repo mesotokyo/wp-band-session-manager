@@ -4,12 +4,12 @@ require_once dirname(__FILE__) . '/google-api-php-client/src/Google/Client.php';
 require_once dirname(__FILE__) . '/google-api-php-client/src/Google/Service/Drive.php';
 
 class BandSessionMaster {
-	function __construct($exportLink, $client, $secret, $token) {
+	function __construct($exportLink, $client, $secret, $token, $request=False) {
 		$this->exportLink = $exportLink;
-		$this->createAccessToken($client, $secret, $token);
+		$this->createAccessToken($client, $secret, $token,$request);
 	}
 
-	function createAccessToken($client_id, $secret, $token) {
+	function createAccessToken($client_id, $secret, $token, $request) {
 		$client = new Google_Client();
 
 		// Get your credentials from the console
@@ -19,16 +19,20 @@ class BandSessionMaster {
 		$client->setScopes(array('https://www.googleapis.com/auth/drive'));
 
 		if ($token == '') {
-			$authUrl = $client->createAuthUrl();
+			if ($request) {
+				$authUrl = $client->createAuthUrl();
 
-			//Request authorization
-			//print "Please visit:\n$authUrl\n\n";
-			//print "Please enter the auth code:\n";
-			//$authCode = trim(fgets(STDIN));
+				//Request authorization
+				//print "Please visit:\n$authUrl\n\n";
+				//print "Please enter the auth code:\n";
+				//$authCode = trim(fgets(STDIN));
 
-			// Exchange authorization code for access token
-			//$token = $client->authenticate($authCode);
-			return;
+				// Exchange authorization code for access token
+				//$token = $client->authenticate($authCode);
+				return;
+			} else {
+				throw new Exception('invalid token');
+			}
 		}
 		$client->setAccessToken($token);
 		$this->client = $client;
