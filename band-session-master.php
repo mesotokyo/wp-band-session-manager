@@ -95,11 +95,11 @@ class BandSessionMaster {
 		$songs = $item["songs"];
 		
 		$result = "<div class='entry'>\n";
-		$text = "<p><span class='date'>${date}</span>：${player}さんが次の曲にエントリーしました</p><ul>";
+		$text = "<p class='author'><span class='date'>${date}</span>：${player}さんが次の曲にエントリーしました</p><ul>";
 		foreach ($songs as $song) {
-			$text = $text . "<li>${song[0]}（${song[2]}、${song[1]})</li>";
+			$text = $text . "<li>${song[0]}（${song[2]}、${song[1]}）</li>";
 		}
-		$text = $text . "</ul><p>${player}さんのコメント：「${comment}」</p>";
+		$text = $text . "</ul><p class='comment'>${player}さんのコメント：「${comment}」</p>";
 		$result = $result . $text . "</div>\n";
 		return $result;
 	}
