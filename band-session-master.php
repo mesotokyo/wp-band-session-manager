@@ -81,7 +81,8 @@ class BandSessionMaster {
 		}
 
 		$result = "<div class=\"entry-history\">\n";
-		foreach ($entries as $item) {
+		
+		foreach (array_reverse($entries) as $item) {
 			$result = $result . $this->format_entry($item);
 		};
 		$result = $result . "</div>\n";
