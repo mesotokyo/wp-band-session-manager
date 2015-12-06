@@ -45,6 +45,64 @@ class BandSessionMaster {
 		$this->workSheet = $this->getWorkSheet($url);
 	}
 
+	function sessionEntryHistory() {
+		$entries = array();
+		$count = 0;
+		foreach ($this->workSheet as $items) {
+			$count++;
+			if ($count == 1) {
+				continue;
+			}
+			if (!array_key_exists($items[0], $entries)) {
+				$entries[$items[0]] = array(
+											"player" => "",
+											"songs" => array(),
+											"date" => "",
+											"comment" => "",
+											);
+			}
+			// エントリー主
+			if ($items[1] != '') {
+				$entries[$items[0]]["player"] = $items[1];
+			}
+			// 曲名
+			if ($items[2] != '') {
+				array_push($entries[$items[0]]["songs"],
+						   array($items[2], $items[3], $items[4]));
+			}
+			// 日付
+			if ($items[5] != '') {
+				$entries[$items[0]]["date"] = $items[5];
+			}
+			// コメント
+			if ($items[6] != '') {
+				$entries[$items[0]]["comment"] = $items[6];
+			}
+		}
+
+		$result = "<div class=\"entry-history\">\n";
+		foreach ($entries as $item) {
+			$result = $result . $this->format_entry($item);
+		};
+		$result = $result . "</div>\n";
+		return $result;
+	}
+	function format_entry($item) {
+		$player = $item["player"];
+		$date = $item["date"];
+		$comment = $item["comment"];
+		$songs = $item["songs"];
+		
+		$result = "<div class='entry'>\n";
+		$text = "<p><span class='date'>${date}</span>：${player}さんが次の曲にエントリーしました</p><ul>";
+		foreach ($songs as $song) {
+			$text = $text . "<li>${song[0]}（${song[2]}、${song[1]})</li>";
+		}
+		$text = $text . "</ul><p>${player}さんのコメント：「${comment}」</p>";
+		$result = $result . $text . "</div>\n";
+		return $result;
+	}
+
 	function createMemberList() {
 		$entries = $this->getMemberList();
 		$head = "<div class=\"band-session-member-list\"><dl>\n";

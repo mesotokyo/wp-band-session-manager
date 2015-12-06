@@ -34,9 +34,17 @@ function memberlist_shortcode_handler($atts, $content=null) {
 	return $bandSession->sessionMembers();
 }
 
+function entryhistory_shortcode_handler($atts, $content=null) {
+	$target_url = html_entity_decode($atts['url']);
+	$bandSession = createSession();
+	$bandSession->fetchWorkSheet($target_url);
+	return $bandSession->sessionEntryHistory();
+}
+
 
 add_shortcode('session-entry-list', 'entrylist_shortcode_handler');
 add_shortcode('session-member-list', 'memberlist_shortcode_handler');
+add_shortcode('session-entry-history', 'entryhistory_shortcode_handler');
 
 /* 管理画面 */
 add_action('admin_menu', 'band_session_master_menu');
