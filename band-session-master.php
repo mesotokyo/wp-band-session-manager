@@ -157,7 +157,7 @@ class BandSessionMaster {
 		$begin_row = $begin_l;
 		$end_row = $end_l;
 
-		$begin_count = 1;
+		$begin_count = 0;
 		$end_count = $count;
 
 		$workSheet = $this->workSheet;
@@ -174,7 +174,7 @@ class BandSessionMaster {
 				$header = $item;
 				$result = $result . "<th>#</th>";
 				foreach ($item as $cell) {
-					if ($cell === "URL") {
+					if ($cell === "URL" || $cell[0] === '#') {
 						continue;
 					}
 					$result = $result . "<th>$cell</th>";
@@ -198,7 +198,7 @@ class BandSessionMaster {
 				}
 				for ($i = 0; $i < count($item); $i++) {
 					$cell = $item[$i];
-					if ($header[$i] === "URL") {
+					if ($header[$i] === "URL" || $header[$i][0] === '#') {
 						continue;
 					}
 					if ($url !== "") {
