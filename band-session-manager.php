@@ -22,9 +22,13 @@ function createSession() {
 
 function entrylist_shortcode_handler($atts, $content=null) {
 	$target_url = html_entity_decode($atts['url']);
+	$header = $atts['header'] ? intval($atts['header']) : 1;
+	$start = $atts['start'] ? intval($atts['start']) : 2;
+        $end = $atts['end'] ? intval($atts['end']) : 20;
+	$count = $atts['count'] ? intval($atts['count']) : 12;
 	$bandSession = createSession();
 	$bandSession->fetchWorkSheet($target_url);
-	return $bandSession->sessionEntries();
+	return $bandSession->sessionEntries($header, $start, $end, $count);
 }
 
 function memberlist_shortcode_handler($atts, $content=null) {

@@ -51,7 +51,7 @@ class BandSessionMaster {
 		$entries_new = array();
 		foreach ($entries as $member => $songs) {
 			$name = $member;
-			if (preg_match('/(.*)（(.*)）/', $member, $matches) === 1) {
+			if (preg_match('/（(.*)）/', $member, $matches) === 1) {
 				$name = $matches[1] . '（譲渡可）';
 			}
 			$entries_new[$name] = implode('、', $songs);
@@ -152,18 +152,18 @@ class BandSessionMaster {
 		return $result;
 	}
 
-	function createEntryTable() {
-		$header_row = 1;
-		$begin_row = 2;
-		$end_row = 12;
+	function createEntryTable($header_l=1, $begin_l=2, $end_l=20, $count=12) {
+		$header_row = $header_l;
+		$begin_row = $begin_l;
+		$end_row = $end_l;
 
 		$begin_count = 1;
-		$end_count = 17;
+		$end_count = $count;
 
 		$workSheet = $this->workSheet;
 		$result = "<div class=\"band-session-entry-list\"><table>\n";
 
-		$counter = 0;
+		$counter = $begin_count;
 
 		$current_row = 0;
 		$header = array();
@@ -180,11 +180,14 @@ class BandSessionMaster {
 					$result = $result . "<th>$cell</th>";
 				}
 				$continue;
+			} else if (($current_row < $begin_row) || ($current_row > $end_row)) {
+				$continue;
 			} else {
-				if (($current_row < $begin_row) || ($current_row > $end_row)) {
+				$counter++;
+				if (($current_row < $begin_row) || ($counter > $end_count)) {
 					$result = $result . "<th></th>";
 				} else {
-					$result = $result . "<th>" . ($counter - $begin_count + 1). "</th>";
+					$result = $result . "<th>" . ($counter). "</th>";
 				}
 				// scan url
 				$url = "";
@@ -206,7 +209,6 @@ class BandSessionMaster {
 						
 				}
 			}
-			$counter++;
 			$result = $result . "</tr>\n";
 		}
 		$result = $result . "</table></div>\n";
@@ -225,8 +227,8 @@ class BandSessionMaster {
 		return $result;
 	}
 
-	function sessionEntries() {
-		return $this->createEntryTable();
+	function sessionEntries($header, $start, $end, $count) {
+		return $this->createEntryTable($header, $start, $end, $count);
 	}
 
 	function downloadFile($url) {
