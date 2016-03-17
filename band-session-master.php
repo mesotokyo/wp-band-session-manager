@@ -134,7 +134,7 @@ class BandSessionMaster {
 	}
 
 	function getMemberList() {
-		$title_column = 0;
+		$title_column = 1;
 		$workSheet = $this->workSheet;
 		$first_row = TRUE;
 		$entries = array();
@@ -147,7 +147,7 @@ class BandSessionMaster {
 
 				// パートとindexの対応付けを作る
 				for ($i = 0; $i < count($items); $i++) {
-					if ($items[$i] === "URL") {
+					if ($items[$i] === "URL" || $items[$i][0] === '#') {
 					}
 					else if (preg_match($part_pattern, $items[$i], $part)) {
 						$parts[$i] = $part[0];
@@ -232,6 +232,9 @@ class BandSessionMaster {
 		$header = array();
 		foreach ($workSheet as $item) {
 			$current_row++;
+			if ($current_row > $end_row) {
+				break;
+			}
 			$result = $result . "<tr>";
 			if ($current_row === $header_row) {
 				$header = $item;
@@ -242,7 +245,6 @@ class BandSessionMaster {
 					}
 					$result = $result . "<th>$cell</th>";
 				}
-				$continue;
 			} else if (($current_row < $begin_row) || ($current_row > $end_row)) {
 				$continue;
 			} else {
