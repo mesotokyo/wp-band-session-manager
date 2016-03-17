@@ -4,12 +4,12 @@ require_once dirname(__FILE__) . '/google-api-php-client/src/Google/Client.php';
 require_once dirname(__FILE__) . '/google-api-php-client/src/Google/Service/Drive.php';
 
 class BandSessionMaster {
-	function __construct($exportLink, $client, $secret, $token) {
+	function __construct($exportLink, $client, $secret, $token, $request=False) {
 		$this->exportLink = $exportLink;
-		$this->createAccessToken($client, $secret, $token);
+		$this->createAccessToken($client, $secret, $token,$request);
 	}
 
-	function createAccessToken($client_id, $secret, $token) {
+	function createAccessToken($client_id, $secret, $token, $request) {
 		$client = new Google_Client();
 
 		// Get your credentials from the console
@@ -19,16 +19,20 @@ class BandSessionMaster {
 		$client->setScopes(array('https://www.googleapis.com/auth/drive'));
 
 		if ($token == '') {
-			$authUrl = $client->createAuthUrl();
+			if ($request) {
+				$authUrl = $client->createAuthUrl();
 
-			//Request authorization
-			//print "Please visit:\n$authUrl\n\n";
-			//print "Please enter the auth code:\n";
-			//$authCode = trim(fgets(STDIN));
+				//Request authorization
+				//print "Please visit:\n$authUrl\n\n";
+				//print "Please enter the auth code:\n";
+				//$authCode = trim(fgets(STDIN));
 
-			// Exchange authorization code for access token
-			//$token = $client->authenticate($authCode);
-			return;
+				// Exchange authorization code for access token
+				//$token = $client->authenticate($authCode);
+				return;
+			} else {
+				throw new Exception('invalid token');
+			}
 		}
 		$client->setAccessToken($token);
 		$this->client = $client;
@@ -39,6 +43,65 @@ class BandSessionMaster {
 			$url = $this->exportLink;
 		}
 		$this->workSheet = $this->getWorkSheet($url);
+	}
+
+	function sessionEntryHistory() {
+		$entries = array();
+		$count = 0;
+		foreach ($this->workSheet as $items) {
+			$count++;
+			if ($count == 1) {
+				continue;
+			}
+			if (!array_key_exists($items[0], $entries)) {
+				$entries[$items[0]] = array(
+											"player" => "",
+											"songs" => array(),
+											"date" => "",
+											"comment" => "",
+											);
+			}
+			// エントリー主
+			if ($items[1] != '') {
+				$entries[$items[0]]["player"] = $items[1];
+			}
+			// 曲名
+			if ($items[2] != '') {
+				array_push($entries[$items[0]]["songs"],
+						   array($items[2], $items[3], $items[4]));
+			}
+			// 日付
+			if ($items[5] != '') {
+				$entries[$items[0]]["date"] = $items[5];
+			}
+			// コメント
+			if ($items[6] != '') {
+				$entries[$items[0]]["comment"] = $items[6];
+			}
+		}
+
+		$result = "<div class=\"entry-history\">\n";
+		
+		foreach (array_reverse($entries) as $item) {
+			$result = $result . $this->format_entry($item);
+		};
+		$result = $result . "</div>\n";
+		return $result;
+	}
+	function format_entry($item) {
+		$player = $item["player"];
+		$date = $item["date"];
+		$comment = $item["comment"];
+		$songs = $item["songs"];
+		
+		$result = "<div class='entry'>\n";
+		$text = "<p class='author'><span class='date'>${date}</span>：${player}さんが次の曲にエントリーしました</p><ul>";
+		foreach ($songs as $song) {
+			$text = $text . "<li>${song[0]}（${song[2]}、${song[1]}）</li>";
+		}
+		$text = $text . "</ul><p class='comment'>${player}さんのコメント：「${comment}」</p>";
+		$result = $result . $text . "</div>\n";
+		return $result;
 	}
 
 	function createMemberList() {
@@ -71,7 +134,7 @@ class BandSessionMaster {
 	}
 
 	function getMemberList() {
-		$title_column = 0;
+		$title_column = 1;
 		$workSheet = $this->workSheet;
 		$first_row = TRUE;
 		$entries = array();
@@ -84,7 +147,7 @@ class BandSessionMaster {
 
 				// パートとindexの対応付けを作る
 				for ($i = 0; $i < count($items); $i++) {
-					if ($items[$i] === "URL") {
+					if ($items[$i] === "URL" || $items[$i][0] === '#') {
 					}
 					else if (preg_match($part_pattern, $items[$i], $part)) {
 						$parts[$i] = $part[0];
@@ -169,6 +232,9 @@ class BandSessionMaster {
 		$header = array();
 		foreach ($workSheet as $item) {
 			$current_row++;
+			if ($current_row > $end_row) {
+				break;
+			}
 			$result = $result . "<tr>";
 			if ($current_row === $header_row) {
 				$header = $item;
@@ -179,6 +245,7 @@ class BandSessionMaster {
 					}
 					$result = $result . "<th>$cell</th>";
 				}
+			} else if (($current_row < $begin_row) || ($current_row > $end_row)) {
 				$continue;
 			} else if (($current_row < $begin_row) || ($current_row > $end_row)) {
 				$continue;
